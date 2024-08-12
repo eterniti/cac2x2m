@@ -141,6 +141,12 @@ void Dialog::GameRequirements()
         DPRINTF("InitSelPort failed.\n");
         exit(-1);
     }
+
+    if (!Xenoverse2::InitCostumeFile())
+    {
+        DPRINTF("InitCostumeFile failed.\n");
+        exit(-1);
+    }
 }
 
 bool Dialog::ProcessShutdown()
@@ -355,6 +361,7 @@ bool Dialog::ConvertToX2m(const QString &file, const QString &code, const uint8_
             return false;
         }
 
+        Cac2X2m::ResolveCustomSuperSoul(&x2m, psc_entry);
         x2m.AddPscEntry(psc_entry);
 
         // aur
@@ -378,11 +385,29 @@ bool Dialog::ConvertToX2m(const QString &file, const QString &code, const uint8_
         }
 
         x2m.AddCmlEntry(cml_entry);
+
+        // Ikd
+        IkdEntry ikd_entry;
+
+        if (!Cac2X2m::SetIkd(race, ikd_entry, cac->body_shape))
+        {
+            DPRINTF("SetIkd failed.\n");
+            return false;
+        }
+
+        x2m.AddIkdEntry(ikd_entry);
     }
 
     if (!Cac2X2m::SetBody(new_esk, new_cam_ean, orig_bcs, cac->body_shape))
     {
         DPRINTF("SetBody failed.\n");
+        return false;
+    }
+
+    x2m.EnableVlc(true);
+    if (!Cac2X2m::SetVlc(race, x2m.GetVlcEntry()))
+    {
+        DPRINTF("SetVlc failed.\n");
         return false;
     }
 
