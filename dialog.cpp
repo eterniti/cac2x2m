@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QCloseEvent>
+#include <QStyleFactory>
 
 #include "Config.h"
 #include "Xenoverse2.h"
@@ -15,7 +16,7 @@
 #pragma warning(disable:4258)
 
 #define PROGRAM_NAME    "Cac2X2m"
-#define PROGRAM_VERSION "1.6"
+#define PROGRAM_VERSION "1.7"
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -38,6 +39,9 @@ bool Dialog::Initialize()
     QDir::setCurrent(qApp->applicationDirPath());
 
     GameRequirements();
+
+    if (config.dark_theme)
+        ToggleDarkTheme(false);
 
     QString file = QFileDialog::getOpenFileName(nullptr, "Select save file", config.lf_external_sav, "XV2 SAV Files (DBXV2.sav)");
     if (file.isNull())
@@ -105,6 +109,8 @@ void Dialog::GameRequirements()
     }
 
     Xenoverse2::InitFs(Utils::QStringToStdString(config.game_directory));
+
+    config.LanguageSetup(false);
 
     if (!Xenoverse2::InitSystemFiles())
     {
@@ -481,6 +487,51 @@ bool Dialog::ConvertToX2m(const QString &file, const QString &code, const uint8_
     }
 
     return true;
+}
+
+void Dialog::ToggleDarkTheme(bool update_config)
+{
+    if (update_config)
+    {
+        config.dark_theme = !config.dark_theme;
+        config.Save();
+    }
+
+    static bool dark_theme = false;
+    static QPalette saved_palette;
+
+    if (!dark_theme)
+    {
+        saved_palette = qApp->palette();
+        //DPRINTF("%s\n", qApp->style()->metaObject()->className());
+
+        qApp->setStyle(QStyleFactory::create("Fusion"));
+        QPalette palette;
+        palette.setColor(QPalette::Window, QColor(53,53,53));
+        palette.setColor(QPalette::WindowText, Qt::white);
+        palette.setColor(QPalette::Base, QColor(15,15,15));
+        palette.setColor(QPalette::AlternateBase, QColor(53,53,53));
+        palette.setColor(QPalette::ToolTipBase, Qt::white);
+        palette.setColor(QPalette::ToolTipText, Qt::white);
+        palette.setColor(QPalette::Text, Qt::white);
+        palette.setColor(QPalette::Button, QColor(53,53,53));
+        palette.setColor(QPalette::ButtonText, Qt::white);
+        palette.setColor(QPalette::BrightText, Qt::red);
+
+        //palette.setColor(QPalette::Highlight, QColor(142,45,197).lighter());
+        palette.setColor(QPalette::HighlightedText, Qt::black);
+        palette.setColor(QPalette::Disabled, QPalette::Text, Qt::darkGray);
+        palette.setColor(QPalette::Disabled, QPalette::ButtonText, Qt::darkGray);
+        qApp->setPalette(palette);
+
+        dark_theme =true;
+    }
+    else
+    {
+        qApp->setStyle(QStyleFactory::create("windowsvista"));
+        qApp->setPalette(saved_palette);
+        dark_theme = false;
+    }
 }
 
 void Dialog::closeEvent(QCloseEvent *event)

@@ -44,6 +44,8 @@ private:
     bool ProcessShutdown();
 
     bool ConvertToX2m(const QString &file, const QString &code, const uint8_t *guid, const std::vector<XV2CacSet *> &sets, bool css_voice);
+
+    void ToggleDarkTheme(bool update_config);
 };
 
 #endif // DIALOG_H

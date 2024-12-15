@@ -11,12 +11,19 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = cac2x2m
 TEMPLATE = app
 
+QMAKE_POST_LINK += mt -nologo -manifest $$PWD/../xv2ins_common/manifest.xml -outputresource:$$OUT_PWD/release/$$TARGET".exe" $$escape_expand(\n\t)
 
 SOURCES += main.cpp\
     ../eternity_common/DBXV2/BdmFile.cpp \
     ../eternity_common/DBXV2/BpeFile.cpp \
     ../eternity_common/DBXV2/IkdFile.cpp \
     ../eternity_common/DBXV2/VlcFile.cpp \
+    ../eternity_common/UtilsCrypto.cpp \
+    ../eternity_common/UtilsFS.cpp \
+    ../eternity_common/UtilsMisc.cpp \
+    ../eternity_common/UtilsStr.cpp \
+    ../eternity_common/UtilsXML.cpp \
+    ../eternity_common/UtilsZlib.cpp \
         dialog.cpp \
     debug.cpp \
     ../eternity_common/tinyxml/tinystr.cpp \
@@ -59,7 +66,6 @@ SOURCES += main.cpp\
     ../eternity_common/Thread.cpp \
     ../eternity_common/TransformMatrix.cpp \
     ../eternity_common/Criware/UtfFile.cpp \
-    ../eternity_common/Utils.cpp \
     ../eternity_common/WavFile.cpp \
     ../eternity_common/DBXV2/X2mFile.cpp \
     ../eternity_common/DBXV2/Xenoverse2.cpp \
@@ -96,6 +102,13 @@ HEADERS  += dialog.h \
     ../eternity_common/DBXV2/BpeFile.h \
     ../eternity_common/DBXV2/IkdFile.h \
     ../eternity_common/DBXV2/VlcFile.h \
+    ../eternity_common/UtilsCrypto.h \
+    ../eternity_common/UtilsFS.h \
+    ../eternity_common/UtilsMisc.h \
+    ../eternity_common/UtilsQt.h \
+    ../eternity_common/UtilsStr.h \
+    ../eternity_common/UtilsXML.h \
+    ../eternity_common/UtilsZlib.h \
     ../eternity_common/crypto/md5.h \
     ../eternity_common/crypto/rijndael.h \
     ../eternity_common/crypto/sha1.h \
