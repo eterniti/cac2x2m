@@ -16,7 +16,7 @@
 #pragma warning(disable:4258)
 
 #define PROGRAM_NAME    "Cac2X2m"
-#define PROGRAM_VERSION "1.7"
+#define PROGRAM_VERSION "1.8"
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
